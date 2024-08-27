@@ -3,7 +3,6 @@ Running Matrix Multiplication in Python over a 128x128x128 matrix
 """
 
 from timeit import timeit
-
 import numpy as np
 
 
@@ -37,4 +36,7 @@ def benchmark_matmul_python(M, N, K):
 
 
 python_gflops = benchmark_matmul_python(128, 128, 128)
-print(f"[MatMul] Python: {python_gflops} GFLOPS")
+print(f"[MatMul][Default] Python: {python_gflops} GFLOPS")
+
+# Write results
+

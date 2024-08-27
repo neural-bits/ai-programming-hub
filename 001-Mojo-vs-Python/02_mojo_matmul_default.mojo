@@ -58,7 +58,7 @@ def benchmark_matmul_untyped(M: Int, N: Int, K: Int):
     var secs = benchmark.run[test_fn](max_runtime_secs=0.5).mean()
     _ = (A, B, C)
     var gflops = ((2*M*N*K)/secs) / 1e9
-    print("[MatMul] Mojo:",gflops % 10e10, "GFLOP/s")
+    print("[MatMul][Default] Mojo: ",gflops % 10e10, "GFLOP/s")
 
 fn main():
     try:
