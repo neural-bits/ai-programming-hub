@@ -1,3 +1,8 @@
+/*
+    This implementation is fully inspired by Andrej Karpathy's minbpe project.
+    The original code can be found at: https://github.com/karpathy/minbpe
+*/
+
 use pyo3::prelude::*;
 use pyo3::prepare_freethreaded_python;
 use std::collections::BTreeMap;
@@ -5,14 +10,18 @@ use std::fs::File;
 use std::io::{BufRead, BufReader, Write};
 use crate::helpers::{get_stats, merge, render_token, build_vocab, b_as_literal};
 
+// We define here the BPETokenizer struct, specify what data it holds
+// The #[pyclass] macro from PyO3 is used to map this as a Python class
 #[pyclass]
 pub struct BPETokenizer {
-    merges: BTreeMap<(i32, i32), i32>,   // (pair, idx)
-    pattern: String,                     // pattern to split the text into tokens
-    special_tokens: BTreeMap<String, i32>, // special tokens (string, idx)
-    vocab: BTreeMap<i32, Vec<u8>>,       // (idx, token)
+    merges: BTreeMap<(i32, i32), i32>,      // (pair, idx)
+    pattern: String,                        // pattern to split the text into tokens
+    special_tokens: BTreeMap<String, i32>,  // special tokens (string, idx)
+    vocab: BTreeMap<i32, Vec<u8>>,          // (idx, token)
 }
 
+// Below is the implementation of all the methods that BPETokenizer struct has.
+// Here, we use the #[pymethods] macro to map these methods as Python methods
 #[pymethods]
 impl BPETokenizer {
     #[new]
@@ -41,7 +50,6 @@ impl BPETokenizer {
             println!("[DEBUG] Number of merges to perform: {}", num_merges);
         }
     
-        // Input text preprocessing
         let text_bytes = text.as_bytes();
         let mut ids: Vec<i32> = text_bytes.iter().map(|&b| b as i32).collect();
     

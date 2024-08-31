@@ -1,0 +1,14 @@
+[build-system]
+requires = ["maturin>=1.7,<1.8"]
+build-backend = "maturin"
+
+[project]
+name = "rust_llm"
+version = "0.1.0"
+description = "Byte-Pair-Encoding algorithm implemented in Rust and build a a shared library to be used in Python. Based on Andrej Karpathy's minbpe"
+readme = "README.md"
+license = "MIT"
+classifiers = [
+    "Programming Language :: Python",
+    "Programming Language :: Rust",
+]
