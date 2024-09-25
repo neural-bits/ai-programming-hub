@@ -12,3 +12,4 @@ pyo3 = { version = "0.20.0", features = ["extension-module"] }
 lazy_static = "1.4.0"
 base64 = "0.22.1"
 unicode_categories = "0.1"
+indexmap = "2.5.0"

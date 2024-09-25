@@ -1,12 +1,14 @@
+use std::collections::HashMap;
 use std::collections::BTreeMap;
+use indexmap::IndexMap;
 use std::str;
 
 // Helpers
 
 // Given a list of integers, return a HashMap of counts of consecutive pairs
 // Example: vec[1,2,3,1,2] -> HMap {(1,2): 2, (2,3): 1, (3,1): 1}
-pub fn get_stats(ids: &[i32]) -> BTreeMap<(i32, i32), usize> {
-    let mut counts = BTreeMap::new();
+pub fn get_stats(ids: &[i32]) -> HashMap<(i32, i32), usize> {
+    let mut counts = HashMap::new();
     for pair in ids.windows(2) {
         let pair = (pair[0], pair[1]);
         *counts.entry(pair).or_insert(0) += 1;
@@ -29,14 +31,19 @@ pub fn merge(ids: &[i32], pair: (i32, i32), idx: i32) -> Vec<i32> {
     newids
 }
 
-pub fn build_vocab(merges: &BTreeMap<(i32, i32), i32>, special_tokens: &BTreeMap<String, i32>) -> BTreeMap<i32, Vec<u8>> {
+pub fn build_vocab(merges: &IndexMap<(i32, i32), i32>, special_tokens: &IndexMap<String, i32>) -> BTreeMap<i32, Vec<u8>> {
+    // that base vocabulary will contain all the ASCII characters
     let mut vocab: BTreeMap<i32, Vec<u8>> = (0..256).map(|idx| (idx as i32, vec![idx as u8])).collect();
     for (&(p0, p1), &idx) in merges {
-        if let Some(vocab_entry) = vocab.get(&p0) {
-            let mut merged_vec = Vec::with_capacity(vocab_entry.len() + vocab[&p1].len());
-            merged_vec.extend_from_slice(vocab_entry);
-            merged_vec.extend_from_slice(&vocab[&p1]);
+        if let (Some(vocab_entry_p0), Some(vocab_entry_p1)) = (vocab.get(&p0), vocab.get(&p1)) {
+            let mut merged_vec = Vec::with_capacity(vocab_entry_p0.len() + vocab_entry_p1.len());
+            merged_vec.extend_from_slice(vocab_entry_p0);
+            merged_vec.extend_from_slice(vocab_entry_p1);
             vocab.insert(idx, merged_vec);
+        }
+        else {
+            // Handle the case where p0 or p1 does not exist in vocab
+            eprintln!("Warning: Missing key in vocab for pair ({}, {})", p0, p1);
         }
     }
 
