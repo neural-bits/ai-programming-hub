@@ -24,6 +24,8 @@ ai-programming-hub/
 ├── high-performance-ml/        # Benchmarking, cost/latency, parallelism
 ├── multi-agent-systems/        # Agent memory, task decomposition, evals
 ├── real-world-projects/        # End-to-end systems (Vision AI, Perception Based, RAG, agents)
+├── production-insights/        # Topics and advice on prod-usecases, deploying at scale.
+
 ```
 
 ---
